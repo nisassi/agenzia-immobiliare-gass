@@ -1,12 +1,12 @@
 # =============================================================================
 # Netlify configuration
 # -----------------------------------------------------------------------------
-# Next.js 16 is supported with ZERO configuration via Netlify's OpenNext adapter.
-# The adapter is installed and kept up to date automatically on every build —
-# do NOT pin it here (Netlify explicitly recommends not pinning it).
+# Next.js 16 runs on Netlify via the OpenNext-based Next.js Runtime
+# ("@netlify/plugin-nextjs"). The version is intentionally NOT pinned: Netlify
+# installs and keeps the adapter up to date on every build.
 #
 # Everything this app needs (App Router, SSR, Server Actions, Middleware,
-# next/image, Turbopack) is provided by that adapter.
+# next/image, Turbopack) is provided by that runtime.
 # =============================================================================
 
 [build]
@@ -20,6 +20,16 @@
   # hydration/asset-mismatch errors during a rollout. See:
   # https://docs.netlify.com/build/frameworks/framework-setup-guides/nextjs/overview/#enabling-skew-protection
   NETLIFY_NEXT_SKEW_PROTECTION = "true"
+
+# Declare the Next.js Runtime explicitly.
+# Normally Netlify auto-injects this plugin for sites that were imported through
+# the dashboard. Sites created programmatically (CLI/API) do not always get that
+# automatic injection, in which case Netlify publishes a static-only output with
+# no functions and no routing — every URL 404s. Declaring it here guarantees the
+# runtime is applied. The package version is deliberately omitted so Netlify
+# installs the current release.
+[[plugins]]
+  package = "@netlify/plugin-nextjs"
 
 # Security headers are defined once in next.config.ts (host-agnostic) and are
 # applied by the Next.js server that Netlify runs. If you ever need to force
