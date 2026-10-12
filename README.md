@@ -297,16 +297,22 @@ server Node.
 > amministratore creato, e codice caricato su un repository Git
 > (GitHub/GitLab/Bitbucket).
 
-### Vercel (consigliato)
+### Netlify (consigliato — gratuito anche per uso commerciale)
 
-1. **Repository** — esegui il primo commit e carica il progetto su GitHub
-   (Vercel importa da lì). `.env.local` è escluso da Git: i segreti non vengono
-   mai inviati al repository.
-2. **Import** — su Vercel: *Add New → Project* → seleziona il repository. Vercel
-   rileva Next.js automaticamente; **non** servono comandi di build
-   personalizzati (*Build Command* `next build`, *Output* gestito dal preset).
-3. **Environment Variables** — aggiungile per *Production*, *Preview* e
-   *Development* con **gli stessi nomi** di `.env.example`:
+Il progetto include già [`netlify.toml`](./netlify.toml). Netlify riconosce
+Next.js 16 con **zero configurazione** tramite il suo adapter OpenNext
+(installato e aggiornato automaticamente: **non** va fissato nel repository).
+
+1. **Repository** — esegui il commit e carica il progetto su GitHub/GitLab/
+   Bitbucket. `.env.local` è escluso da Git: i segreti non vengono mai inviati.
+2. **Import** — Netlify: *Add new site → Import an existing project* → scegli il
+   provider e il repository. Netlify rileva Next.js automaticamente e usa
+   `npm run build` con output `.next` (già indicati in `netlify.toml`).
+3. **Node.js** — `netlify.toml` imposta `NODE_VERSION = "22"` (Next.js 16
+   richiede ≥ 20.9). Puoi sovrascriverlo da *Site configuration → Build &
+   deploy → Environment variables*.
+4. **Environment Variables** — *Site configuration → Environment variables*, con
+   gli stessi nomi di `.env.example`:
 
    | Variabile | Obbligatoria | Valore |
    | --- | --- | --- |
@@ -318,39 +324,52 @@ server Node.
    | `NEXT_PUBLIC_MAX_VIDEO_UPLOAD_BYTES` | ➖ | `52428800` |
    | `RESEND_API_KEY` · `INQUIRY_NOTIFICATION_EMAIL` · `INQUIRY_FROM_EMAIL` | ➖ | solo per le notifiche email |
 
-   > ⚠️ **Mai** aggiungere la **service-role key**: serve solo lato server e non
-   > va mai usata in questo progetto (né su Vercel né nel browser).
+   > ⚠️ **Mai** aggiungere la **service-role key**: non va mai usata in questo
+   > progetto (né lato client né nel repository).
 
-4. **Node.js** — Next.js 16 richiede **Node ≥ 20.9**; Vercel usa una versione
-   LTS recente. `package.json` dichiara `engines.node` in modo coerente. Per
-   fissarla: *Settings → General → Node.js Version*.
-5. **Deploy** — Vercel esegue `npm install` e `next build`.
-6. **Dominio** — *Settings → Domains*: aggiungi il dominio e configura il DNS.
-   Vercel genera il certificato **HTTPS** automaticamente.
+5. **Deploy** — Netlify esegue la build e pubblica. Ogni push su `main`
+   ridistribuisce automaticamente; le pull request generano *deploy preview*.
+6. **Dominio** — *Domain management*: aggiungi il dominio e configura il DNS.
+   Netlify fornisce **HTTPS** automaticamente.
 
-Se `NEXT_PUBLIC_SITE_URL` non è impostata, l'app usa automaticamente il dominio
-Vercel (`VERCEL_PROJECT_PRODUCTION_URL`), quindi anche le anteprime hanno
-canonical e sitemap sensati.
+Se `NEXT_PUBLIC_SITE_URL` non è impostata, l'app usa automaticamente l'URL
+Netlify (`URL`), quindi anche le anteprime hanno canonical e sitemap sensati.
+
+> **Skew protection** già attiva in `netlify.toml`
+> (`NETLIFY_NEXT_SKEW_PROTECTION = "true"`): evita errori di asset/hydration
+> durante i rilasci.
+
+> Funzionalità verificate come supportate su Netlify: App Router, SSR, **Server
+> Actions**, **Middleware** (`proxy.ts`, eseguito come Edge Function),
+> `next/image` (Image CDN), **Turbopack**.
+
+### Vercel (solo con piano Pro per uso commerciale)
+
+⚠️ Il piano **Hobby** di Vercel è riservato all'uso personale/non commerciale:
+per il sito di un'agenzia serve **Vercel Pro** (~$20/mese). Se scegli Vercel:
+
+1. Importa il repository (*Add New → Project*); il framework è rilevato
+   automaticamente.
+2. Aggiungi le stesse variabili d'ambiente (Production/Preview/Development).
+3. *Settings → General → Node.js Version*: una LTS ≥ 20.9.
+4. Deploy, poi aggiungi il dominio in *Settings → Domains* (HTTPS automatico).
+
+L'app usa automaticamente il dominio Vercel
+(`VERCEL_PROJECT_PRODUCTION_URL`) se `NEXT_PUBLIC_SITE_URL` non è impostata.
 
 ### Dopo il primo deploy (obbligatorio)
 
 - **Supabase → Authentication → URL Configuration**:
   - *Site URL*: `https://tuodominio.it`
-  - *Redirect URLs*: `https://tuodominio.it/admin/reset-password` (e, per le
-    anteprime, `https://*-<progetto>.vercel.app/**`).
+  - *Redirect URLs*:
+    - `https://tuodominio.it/admin/reset-password`
+    - anteprime: `https://*.netlify.app/**` (o `https://*-<progetto>.vercel.app/**`)
 
   Senza questo passaggio il **recupero password** e i link nelle email non
   funzionano.
 - Verifica che **HTTPS** sia attivo (necessario per cookie e sessioni sicure).
 - **Hardening**: disattiva la **registrazione pubblica** su Supabase
   (*Authentication → Sign In / Up → "Allow new users to sign up"*).
-
-### Netlify (alternativa)
-
-1. Collega il repository (o installa la CLI, `npm i -g netlify-cli`).
-2. Il plugin ufficiale `@netlify/plugin-nextjs` è rilevato automaticamente.
-3. Imposta le stesse variabili d'ambiente.
-4. Deploy.
 
 ### Checklist post-deploy
 

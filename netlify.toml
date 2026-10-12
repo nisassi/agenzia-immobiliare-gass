@@ -1,0 +1,26 @@
+# =============================================================================
+# Netlify configuration
+# -----------------------------------------------------------------------------
+# Next.js 16 is supported with ZERO configuration via Netlify's OpenNext adapter.
+# The adapter is installed and kept up to date automatically on every build —
+# do NOT pin it here (Netlify explicitly recommends not pinning it).
+#
+# Everything this app needs (App Router, SSR, Server Actions, Middleware,
+# next/image, Turbopack) is provided by that adapter.
+# =============================================================================
+
+[build]
+  command = "npm run build"
+  publish = ".next"
+
+[build.environment]
+  # Next.js 16 requires Node >= 20.9. Pin a supported LTS for reproducible builds.
+  NODE_VERSION = "22"
+  # Opt-in: keeps in-flight visitors on the deployment they loaded, preventing
+  # hydration/asset-mismatch errors during a rollout. See:
+  # https://docs.netlify.com/build/frameworks/framework-setup-guides/nextjs/overview/#enabling-skew-protection
+  NETLIFY_NEXT_SKEW_PROTECTION = "true"
+
+# Security headers are defined once in next.config.ts (host-agnostic) and are
+# applied by the Next.js server that Netlify runs. If you ever need to force
+# them at the CDN edge as well, add a [[headers]] block here.

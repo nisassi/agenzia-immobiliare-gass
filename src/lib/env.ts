@@ -18,20 +18,25 @@ const rawUrl = process.env.NEXT_PUBLIC_SUPABASE_URL?.trim() ?? "";
  *   1. NEXT_PUBLIC_SITE_URL (explicit, recommended in production)
  *   2. Vercel's stable production domain (VERCEL_PROJECT_PRODUCTION_URL)
  *   3. Vercel's per-deployment URL (VERCEL_URL)
- *   4. http://localhost:3000
+ *   4. Netlify's primary site URL (URL)
+ *   5. http://localhost:3000
  *
- * Vercel injects the last two automatically, so preview/production deploys are
- * correct even before the explicit variable is configured.
+ * Vercel and Netlify inject their own values automatically, so preview and
+ * production deploys are correct even before the explicit variable is set.
  */
 function resolveSiteUrl(): string {
   const explicit = process.env.NEXT_PUBLIC_SITE_URL?.trim();
   if (explicit) return explicit.replace(/\/+$/, "");
 
-  const production = process.env.VERCEL_PROJECT_PRODUCTION_URL?.trim();
-  if (production) return `https://${production}`.replace(/\/+$/, "");
+  const vercelProduction = process.env.VERCEL_PROJECT_PRODUCTION_URL?.trim();
+  if (vercelProduction) return `https://${vercelProduction}`.replace(/\/+$/, "");
 
-  const deployment = process.env.VERCEL_URL?.trim();
-  if (deployment) return `https://${deployment}`.replace(/\/+$/, "");
+  const vercelDeployment = process.env.VERCEL_URL?.trim();
+  if (vercelDeployment) return `https://${vercelDeployment}`.replace(/\/+$/, "");
+
+  // Netlify sets URL to the site's primary address (already includes protocol).
+  const netlifyUrl = process.env.URL?.trim();
+  if (netlifyUrl) return netlifyUrl.replace(/\/+$/, "");
 
   return "http://localhost:3000";
 }
