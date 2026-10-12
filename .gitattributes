@@ -1,0 +1,14 @@
+# Normalize line endings: always store LF in the repository and check out LF,
+# so Windows/Unix contributors don't create noisy diffs.
+* text=auto eol=lf
+
+# Explicitly binary assets (never converted, never diffed as text).
+*.png   binary
+*.jpg   binary
+*.jpeg  binary
+*.gif   binary
+*.webp  binary
+*.avif  binary
+*.ico   binary
+*.woff  binary
+*.woff2 binary
