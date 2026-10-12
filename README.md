@@ -280,8 +280,18 @@ Per **revocare** l'accesso: `delete from public.admins where user_id = '<UUID>';
 
 ## Deployment
 
-L'app è un normale progetto Next.js: funziona su **Vercel** (consigliato),
-**Netlify** o un server Node.
+L'app è un normale progetto Next.js: funziona su **Vercel**, **Netlify** o un
+server Node.
+
+> ⚠️ **Scelta dell'host e uso commerciale.** Il sito di un'agenzia è un progetto
+> **commerciale**:
+> - **Netlify Free** — consente l'uso commerciale: **gratuito e in regola**. ✅
+> - **Vercel Hobby** — solo uso personale/non commerciale; per un'agenzia serve
+>   **Vercel Pro** (~$20/mese). Usare Vercel Hobby per il sito dell'agenzia
+>   viola i Termini di Servizio.
+>
+> Le istruzioni per entrambi gli host sono qui sotto. La configurazione del
+> progetto è **host-agnostica** (header di sicurezza, fallback dell'URL, ecc.).
 
 > Prerequisiti: schema applicato su Supabase (`supabase/setup.sql`), primo
 > amministratore creato, e codice caricato su un repository Git
@@ -532,8 +542,15 @@ volutamente rinviati. Prima della pubblicazione:
 
 - **Supabase Free** — Postgres, Auth, Storage e RLS. Nota: i progetti gratuiti
   vanno in pausa se inattivi; valutare il piano a pagamento per la produzione.
-- **Netlify / Vercel** — piani gratuiti adatti a un sito vetrina; verificare i
-  limiti di banda/funzioni del piano scelto.
+- **Hosting — attenzione ai termini commerciali** (verificati a ottobre 2026):
+  - **Netlify Free**: consente **progetti commerciali**. Piano gratuito con
+    crediti mensili (banda/build/funzioni). ✅ Adatto a un sito d'agenzia.
+  - **Vercel Hobby**: **solo uso personale/non commerciale**. I Termini di
+    Servizio vietano l'uso commerciale sul piano gratuito: per il sito di
+    un'agenzia serve **Vercel Pro** (~$20/mese per utente). ⚠️
+  - Conclusione: per restare **gratuiti e in regola** con un sito commerciale,
+    **Netlify Free** è la scelta consigliata; se si preferisce Vercel, prevedere
+    il piano Pro.
 - **Resend** (facoltativo) — piano gratuito con limiti di invio.
 - **Font** (Inter, Cormorant Garamond) e **icone** (Lucide) sono open source.
 
