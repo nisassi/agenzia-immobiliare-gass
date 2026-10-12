@@ -1,0 +1,20 @@
+-- =============================================================================
+-- admin_setup.sql  —  TEMPLATE (do not commit real addresses)
+-- -----------------------------------------------------------------------------
+-- Provision the first administrator Safely:
+--
+--   1. Supabase Dashboard -> Authentication -> Users -> "Add user".
+--      Create the account with the agency owner's email and a strong password.
+--      Confirm the email (or disable email confirmation for this single user).
+--   2. Copy the new user's UUID from the users table.
+--   3. Replace the two placeholders below and run this snippet in the SQL
+--      editor. It runs with elevated privileges and bypasses RLS, which is
+--      exactly why membership cannot be self-granted from the app.
+--
+--      insert into public.admins (user_id, email)
+--      values ('<USER_UUID>', '<OWNER_EMAIL>')
+--      on conflict (user_id) do nothing;
+--
+-- To revoke access, simply delete the row:
+--      delete from public.admins where user_id = '<USER_UUID>';
+-- =============================================================================
