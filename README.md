@@ -280,6 +280,19 @@ Per **revocare** l'accesso: `delete from public.admins where user_id = '<UUID>';
 
 ## Deployment
 
+> **Stato attuale (deployment attivo).** Il progetto è già pubblicato su Netlify
+> all'indirizzo **https://immobiliaremille.netlify.app** ed è collegato al
+> repository GitHub **`nisassi/agenzia-immobiliare-gass`** (branch `main`): ogni
+> `git push` su `main` avvia automaticamente un nuovo deploy di produzione.
+> Variabili d'ambiente già configurate su Netlify: `NEXT_PUBLIC_SUPABASE_URL`,
+> `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `NEXT_PUBLIC_SITE_URL`.
+>
+> Il runtime Next.js è dichiarato esplicitamente in `netlify.toml`
+> (`[[plugins]] package = "@netlify/plugin-nextjs"`): i siti creati via CLI/API
+> non ricevono l'iniezione automatica del plugin, che quindi va dichiarato a
+> mano. **Non** eseguire `netlify deploy` da Windows (bug del bundler edge della
+> CLI): per pubblicare basta `git push`.
+
 L'app è un normale progetto Next.js: funziona su **Vercel**, **Netlify** o un
 server Node.
 
